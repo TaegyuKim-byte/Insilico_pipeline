@@ -1,6 +1,7 @@
 # 🧬Insilico_pipeline
 코딩 없이 웹 GUI만으로 단일세포 전사체(scRNA-seq) 데이터를 분석하고 시각화하는 웹 플랫폼
 
+
 ## Table of Contents 
 
 - [Purpose](#-purpose)
@@ -8,6 +9,7 @@
 - [Tech Stack](#-tech-stack)
 - [Architecture](#-architecture)
 - [Project Structure](#-project-structure)
+
 
 ## 🎯 Purpose 
 
@@ -17,6 +19,7 @@
 | 1 | Scanpy 등 분석 도구는 Python/R 코드 작성을 전제로 해서, 프로그래밍 진입장벽 때문에 생명과학 연구자가 분석을 섣불리 시도하지 못한다 | **GUI 기반 조작** |
 | 2 | 상용 GUI 분석 프로그램(Loupe Browser 등)은 대학병원·대형 기관 외 소규모 랩실이 쓰기엔 라이선스 비용이 부담스럽다 | **웹 기반 무료 플랫폼** |
 | 3 | 환경 구축(Python/R 설치, 라이브러리 의존성) 자체가 별도의 진입장벽이 된다 | **설치 없는 브라우저 접근** |
+
 
 ## ✨ Key Features
 
@@ -46,9 +49,12 @@ Resolution 설정 → UMAP 생성 클릭 → Leiden 클러스터링 실행 → U
 
 ## 🛠 Tech Stack
 
+
 ## 🗺️ Architecture 
 
+
 ## 📁 Project Structure
+
 
 ## :busts_in_silhouette: Team
 
