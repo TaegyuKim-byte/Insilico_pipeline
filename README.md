@@ -1,6 +1,7 @@
 # 🧬Insilico_pipeline
 코딩 없이 웹 GUI만으로 단일세포 전사체(scRNA-seq) 데이터를 분석하고 시각화하는 웹 플랫폼
 
+> 🚧 Status: 설계 단계 (Design phase) — 문서화 완료, 구현 착수 전
 
 ## Table of Contents 
 
@@ -29,19 +30,22 @@
 
 웹사이트 접속 → h5ad 업로드 → 데이터셋 정보 확인(세포 수, 유전자 수, 기존 결과 존재 여부) → 사용자에게 표시
 
-2️⃣ 기존 결과 재사용 또는 신규 분석 설정
+2️⃣ UMAP 단색 표시 & 분석 여부 노출
 
-기존 분석 결과가 있는지에 따라 사용자 경험이 갈라집니다.
+업로드가 끝나면 클러스터링 결과 존재 여부와 관계없이 UMAP을 단색으로 먼저 보여줍니다.
+색 구분은 분석을 실행해야 입혀집니다.
 
-상황	사용자 동작
-기존 UMAP/클러스터링 결과가 있음	바로 UMAP을 탐색
-결과가 없거나 새 기준으로 재분석하고 싶음	클러스터링 해상도(Resolution)를 설정
+| 상황 | 사용자 동작 |
+|---|---|
+| 구조만 훑어보고 싶음 | 단색 UMAP을 그대로 탐색 |
+| 클러스터별 색을 보고 싶음 | Resolution 설정 후 분석 실행 |
 
-3️⃣ 클러스터링 + UMAP 생성
+3️⃣ Leiden 클러스터링 & 재채색
 
-사용자가 UMAP 생성 버튼을 누르면, 시스템이 설정된 Resolution으로 클러스터링과 UMAP 계산을 수행합니다.
+Resolution을 설정해 분석을 실행하면 클러스터 라벨을 계산해 반환하고, UMAP을 클러스터별로 다시 색칠합니다.
+UMAP 좌표 자체는 업로드된 값을 재사용하며 새로 계산하지 않습니다.
 
-Resolution 설정 → UMAP 생성 클릭 → Leiden 클러스터링 실행 → UMAP 좌표 계산 → 결과 반환
+Resolution 설정 → 분석 실행 → Leiden 클러스터링 → 클러스터 라벨 반환 → UMAP 재채색
 
 4️⃣ UMAP 인터랙티브 탐색
 
@@ -50,16 +54,23 @@ Resolution 설정 → UMAP 생성 클릭 → Leiden 클러스터링 실행 → U
 
 ## 🛠 Tech Stack
 
+- Frontend: Next.js
+- Backend: FastAPI
+- 분석: Scanpy, Anndata
+- 메타데이터: SQLite
+- 파일 저장: Local Storage (.h5ad)
 
 ## 🗺️ Architecture 
+
+구조, 데이터 흐름은 [docs/architecture.md](docs/architecture.md) 참고
 
 
 ## 📁 Project Structure
 
-
-## :busts_in_silhouette: Team
-
-| 역할 | 담당 |
-|---|---|
-| Frontend | Minseo Kim |
-| Backend | Taekyu Kim |
+```
+Insilico_pipeline/
+├── backend/      # FastAPI (Dataset / Visualization / Analysis)
+├── frontend/     # Next.js
+├── sample-data/  # 예제 .h5ad
+└── docs/         # 설계 문서 (architecture / api / workflow)
+```

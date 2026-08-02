@@ -23,11 +23,11 @@
 
 ```json
 {
-	"datasetId": "ds_001"
-	"fileName": "pbmc.h5ad"
-	"fileSize": 24076
-	"cellCount": 2638
-	"geneCount": 1838
+	"datasetId": "ds_001",
+	"fileName": "pbmc.h5ad",
+	"fileSize": 24076,
+	"cellCount": 2638,
+	"geneCount": 1838,
 	"hasLeiden": true
 }
 ```
@@ -106,8 +106,8 @@
 
 ```json
 {
-	"datasetId": "ds_001"
-	"cellCount": 2638
+	"datasetId": "ds_001",
+	"cellCount": 2638,
 	"points": [
 		[1.24, -0.53],
     [0.91, -0.87],
@@ -127,7 +127,7 @@ points[i][1] = i번째 세포의 y 좌표
 | HTTP Status | 오류 코드 | 설명 |
 | --- | --- | --- |
 | 404 Not Found | DATASET_NOT_FOUND | 요청한 datasetId가 존재하지 않음   |
-| 500 Internal Server Error | UMAP_LOAD_FAIL | 파일 손상이나 저장 오류 또는 서버 자체의 오류 |
+| 500 Internal Server Error | UMAP_LOAD_FAILED | 파일 손상이나 저장 오류 또는 서버 자체의 오류 |
 1. 데이터셋을 찾을 수 없음
 
 ```json
