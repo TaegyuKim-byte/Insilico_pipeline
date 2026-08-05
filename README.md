@@ -1,13 +1,15 @@
 # 🧬Insilico_pipeline
-코딩 없이 웹 GUI만으로 단일세포 전사체(scRNA-seq) 데이터를 분석하고 시각화하는 웹 플랫폼
+코딩 없이 웹 GUI만으로 단일세포 전사체(scRNA-seq) 데이터를 클러스터링하고 시각화하는 웹 플랫폼
 
 ## Table of Contents 
 
 - [Purpose](#-purpose)
 - [Key Features](#-key-features)
+- [How To Use](#-how-to-use)
 - [Tech Stack](#-tech-stack)
 - [Architecture](#-architecture)
 - [Project Structure](#-project-structure)
+- [Team](#-team)
 
 ## 🎯 Purpose 
 
@@ -20,35 +22,67 @@
 
 ## ✨ Key Features
 
-1️⃣ 데이터 업로드 & 데이터셋 정보 확인
+1️⃣ 데이터 업로드 & 데이터셋 검증 
 
-사용자가 .h5ad 파일을 업로드하면, 시스템이 세포 수·유전자 수 등 기본 정보와 기존 UMAP/클러스터링 결과 존재 여부를 함께 확인해 보여줍니다.
+사용자가 `.h5ad` 파일을 업로드하면, 시스템이 파일 형식과 데이터 구조(`X`, `obs`, `var`, UMAP 좌표, Neighbor Graph)를 검증한 뒤 등록합니다.
 
-웹사이트 접속 → h5ad 업로드 → 데이터셋 정보 확인(세포 수, 유전자 수, 기존 결과 존재 여부) → 사용자에게 표시
+h5ad 업로드 → 파일 형식/구조 검증 → 데이터셋 등록(datasetId 발급) → 세포 수·유전자 수·기존 Leiden 결과 존재 여부 반환
 
-2️⃣ 기존 결과 재사용 또는 신규 분석 설정
+2️⃣ UMAP 조회(기존 좌표 시각화)
 
-기존 분석 결과가 있는지에 따라 사용자 경험이 갈라집니다.
+등록된 데이터셋에 저장되어 있던 UMAP 좌표를 그대로 불러와 보여줍니다. 별도 클러스터링 전에는 단색으로 표시됩니다.
 
-상황	사용자 동작
-기존 UMAP/클러스터링 결과가 있음	바로 UMAP을 탐색
-결과가 없거나 새 기준으로 재분석하고 싶음	클러스터링 해상도(Resolution)를 설정
-3️⃣ 클러스터링 + UMAP 생성
+datasetId로 UMAP 조회 요청 → 저장된 UMAP 좌표 반환 → 클라이언트 렌더링
 
-사용자가 UMAP 생성 버튼을 누르면, 시스템이 설정된 Resolution으로 클러스터링과 UMAP 계산을 수행합니다.
+3️⃣ Resolution 설정 & Leiden 클러스터링 실행
 
-Resolution 설정 → UMAP 생성 클릭 → Leiden 클러스터링 실행 → UMAP 좌표 계산 → 결과 반환
+사용자가 클러스터링 해상도(Resolution)를 설정하고 실행하면, 시스템은 데이터셋에 포함된 기존 Neighbor Graph를 이용해 Leiden 클러스터링을 수행합니다.
+
+Resolution 설정 → 클러스터링 실행 클릭 → 기존 Neighbor Graph 기반 Leiden 실행 → 클러스터 라벨 반환 → 기존 UMAP 좌표 위에 색상 반영 
 
 4️⃣ UMAP 인터랙티브 탐색
 
-생성되었거나 기존에 존재하던 UMAP을 확대·축소하며 자유롭게 탐색할 수 있습니다.
+클러스터링 결과가 반영된 UMAP을 확대,축소,이동하며 자유롭게 탐색하고 특정 클러스터를 클릭해 하이라이트할 수 있습니다. 
 
+## 🥸 How To Use 
 
 ## 🛠 Tech Stack
 
+| 영역 | 기술 |
+|---|---|
+| Frontend | Next.js |
+| Backend | FastAPI |
+| Analysis | Scanpy (Leiden Clustering) |
+| Metadata Storage | SQLite |
+| File Storage | h5ad 파일 시스템 저장 |
+
 ## 🗺️ Architecture 
 
+ Next.js Client
+      │
+      ▼
+ FastAPI Server
+ ┌───────────────────┬───────────┬────────────────┐
+ │ Dataset Management │  Analysis │  Visualization  │
+ └───────────────────┴───────────┴────────────────┘
+      │                    │              │
+      ▼                    ▼              ▼
+   SQLite            h5ad Storage    h5ad Storage
+ (메타데이터)         (원본 파일 로드)  (UMAP 좌표 로드)
+
+ - Dataset Management: .h5ad 업로드 검증 → 원본 파일 저장 → 메타데이터 등록 → datasetId 반환
+ - Visualization: datasetId로 저장된 .h5ad에서 UMAP 좌표를 읽어 반환
+ - Analysis: datasetId와 resolution으로 기존 Neighbor Graph 기반 Leiden 클러스터링 수행 후 라벨 반환
+
 ## 📁 Project Structure
+
+insilico-pipeline/
+├── frontend/          # Next.js
+├── backend/           # FastAPI
+├── docs/              # 설계 문서
+├── sample-data/       # 테스트용 .h5ad
+├── .gitignore
+├── README.md
 
 ## :busts_in_silhouette: Team
 
