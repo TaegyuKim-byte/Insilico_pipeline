@@ -1,27 +1,89 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const ACCEPTED_EXTENSION = ".h5ad";
 
 export default function UploadCard() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const dragCounter = useRef(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const [rejectedFile, setRejectedFile] = useState<string | null>(null);
+
+  // A drop that misses the zone (e.g. lands on the page background) would
+  // otherwise make the browser navigate away to open the file directly.
+  useEffect(() => {
+    function preventDefault(e: DragEvent) {
+      e.preventDefault();
+    }
+    window.addEventListener("dragover", preventDefault);
+    window.addEventListener("drop", preventDefault);
+    return () => {
+      window.removeEventListener("dragover", preventDefault);
+      window.removeEventListener("drop", preventDefault);
+    };
+  }, []);
+
+  function acceptFile(file: File | undefined | null) {
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith(ACCEPTED_EXTENSION)) {
+      setRejectedFile(file.name);
+      setSelectedFile(null);
+      return;
+    }
+    setRejectedFile(null);
+    setSelectedFile(file);
+  }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSelectedFile(e.target.files?.[0] ?? null);
+    acceptFile(e.target.files?.[0]);
+  }
+
+  function handleDragEnter(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    dragCounter.current += 1;
+    setIsDraggingOver(true);
+  }
+
+  function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  }
+
+  function handleDragLeave(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    dragCounter.current = Math.max(0, dragCounter.current - 1);
+    if (dragCounter.current === 0) setIsDraggingOver(false);
+  }
+
+  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    dragCounter.current = 0;
+    setIsDraggingOver(false);
+    acceptFile(e.dataTransfer.files?.[0]);
   }
 
   return (
     <div className="card elev-sm" style={{ maxWidth: 640, padding: "var(--space-6)" }}>
       <div
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "var(--space-3)",
-          border: "1px dashed var(--color-neutral-700)",
+          border: `1px dashed ${isDraggingOver ? "var(--color-accent)" : "var(--color-neutral-700)"}`,
           borderRadius: "var(--radius-md)",
           padding: "var(--space-8) var(--space-6)",
           textAlign: "center",
+          background: isDraggingOver
+            ? "color-mix(in srgb, var(--color-accent) 8%, transparent)"
+            : "transparent",
+          transition: "border-color 120ms ease, background-color 120ms ease",
         }}
       >
         <svg width="28" height="28" viewBox="0 0 256 256" fill="var(--color-accent-300)">
@@ -47,6 +109,11 @@ export default function UploadCard() {
         {selectedFile && (
           <p className="text-muted" style={{ margin: 0, fontSize: 12 }}>
             선택한 파일: {selectedFile.name}
+          </p>
+        )}
+        {rejectedFile && (
+          <p style={{ margin: 0, fontSize: 12, color: "#d97c96" }}>
+            {rejectedFile}은(는) .h5ad 파일이 아닙니다.
           </p>
         )}
       </div>
