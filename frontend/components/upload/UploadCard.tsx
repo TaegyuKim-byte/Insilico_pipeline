@@ -4,6 +4,11 @@ import { useEffect, useRef, useState } from "react";
 
 const ACCEPTED_EXTENSION = ".h5ad";
 
+// Mirrors the INVALID_FILE_FORMAT (400) message from docs/api.md so the
+// client-side guard reads identically to the server's eventual response.
+const INVALID_FILE_FORMAT_MESSAGE =
+  "지원하지 않는 파일 형식입니다. (.h5ad 파일만 업로드할 수 있습니다.)";
+
 export default function UploadCard() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dragCounter = useRef(0);
@@ -113,7 +118,9 @@ export default function UploadCard() {
         )}
         {rejectedFile && (
           <p style={{ margin: 0, fontSize: 12, color: "#d97c96" }}>
-            {rejectedFile}은(는) .h5ad 파일이 아닙니다.
+            {INVALID_FILE_FORMAT_MESSAGE}
+            <br />
+            <span className="text-muted">선택한 파일: {rejectedFile}</span>
           </p>
         )}
       </div>
