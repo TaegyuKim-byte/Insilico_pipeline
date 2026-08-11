@@ -1,13 +1,8 @@
-"""데이터셋 업로드/검증/저장 로직.
-
-TODO(구현): 파일 형식·크기 검증 → AnnData 로드 → X/obs/var + UMAP/Neighbor Graph 검증
-            → 저장 + 메타 등록 → datasetId 반환. 실패 시 app.core.errors.APIError 발생.
-"""
-
 import shutil
 import os
 import anndata as ad
 from uuid import uuid4
+from fastapi import UploadFile
 
 from app.core.config import settings
 from app.core.errors import APIError
@@ -18,10 +13,14 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 
-def create_dataset(file, db: Session) -> DatasetUploadResponse:
+def create_dataset(file: UploadFile, db: Session) -> DatasetUploadResponse:
     # 파일 형식 검증
-    if not file.filename.endswith(".h5ad"):
-        raise APIError(400, "INVALID_FILE_FORMAT", "지원하지 않는 파일 형식입니다. (.h5ad 파일만 업로드할 수 있습니다.)")
+    if not file.filename or not file.filename.lower().endswith(".h5ad"):
+        raise APIError(
+            400,
+            "INVALID_FILE_FORMAT",
+            "지원하지 않는 파일 형식입니다. (.h5ad 파일만 업로드할 수 있습니다.)",
+        )
 
     # 파일 크기 검증 (내용을 읽지 않고 끝 위치로 크기만 확인)
     file.file.seek(0, os.SEEK_END)   # 파일 끝으로 이동
