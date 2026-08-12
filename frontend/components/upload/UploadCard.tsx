@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   DatasetUploadError,
   DatasetUploadNetworkError,
-  type DatasetUploadSuccess,
+  type DatasetUploadSuccess, // upload success
   uploadDataset,
   validateFileLocally,
 } from "@/lib/api/datasets";
@@ -84,7 +84,7 @@ export default function UploadCard() {
     submit(candidate);
   }
 
-  function reset() {
+  function reset() { //for another file upload 
     setPhase("idle");
     setFile(null);
     setError(null);
@@ -156,8 +156,9 @@ export default function UploadCard() {
               .h5ad 파일을 드래그하거나 선택하세요
             </div>
             <p className="card-body" style={{ margin: 0 }}>
-              AnnData 객체(.h5ad)만 업로드할 수 있습니다. 전처리(PCA), Neighbor Graph, UMAP 계산이
-              완료된 파일이어야 합니다.
+              AnnData 객체(.h5ad)만 업로드할 수 있습니다.
+              <br />
+              전처리(PCA), Neighbor Graph, UMAP 계산이 완료된 파일이어야 합니다.
             </p>
             <button
               type="button"
