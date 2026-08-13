@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # 업로드된 원본 h5ad 저장 경로
     storage_dir: Path = BASE_DIR / "storage"
     # 최대 업로드 크기 (bytes) — 초과 시 413 FILE_TOO_LARGE
-    max_upload_size: int = 500 * 1024 * 1024  # 500MB
+    max_upload_size: int = 2 * 1024 * 1024 * 1024  # 2GB
     # 메타데이터 SQLite
     database_url: str = f"sqlite:///{BASE_DIR / 'insilico.db'}"
     # Leiden resolution 허용 범위
