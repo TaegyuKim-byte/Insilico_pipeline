@@ -1,1 +1,40 @@
+# ── Python / FastAPI (backend) ─────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# ── Node / Next.js (frontend) ──────────────────
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Data & DB ──────────────────────────────────
+*.h5ad
+*.db
+*.sqlite
+*.sqlite3
+storage/
+sample-data/*.h5ad
+
+# ── Env & secrets ──────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── OS / editor ────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+
 .claude/
