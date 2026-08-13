@@ -14,7 +14,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         # 허용할 주소들
-        # http://localhost:3000 ...
+        "http://localhost:3000",
     ],
     allow_credentials=False, # 현재 쿠키 기반 로그인 요청 X. 비활성화
     allow_methods=["GET", "POST"],
