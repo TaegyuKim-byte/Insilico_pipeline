@@ -35,3 +35,6 @@ sample-data/*.h5ad
 Thumbs.db
 .idea/
 .vscode/
+
+
+.claude/
