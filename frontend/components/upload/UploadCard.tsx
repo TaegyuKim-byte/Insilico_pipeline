@@ -13,6 +13,44 @@ type Phase = "idle" | "uploading" | "success" | "error";
 
 const ERROR_COLOR = "#d97c96";
 
+function getErrorIcon(error: DatasetUploadError | DatasetUploadNetworkError) {
+  if (error instanceof DatasetUploadNetworkError) {
+    return (
+      <svg width="56" height="56" viewBox="0 0 256 256" fill="var(--color-accent-300)" style={{ marginBottom: "var(--space-4)"}}>
+        <path d="M229.66,98.34a8,8,0,0,1-11.32,11.32L200,91.31l-18.34,18.35a8,8,0,0,1-11.32-11.32L188.69,80,170.34,61.66a8,8,0,0,1,11.32-11.32L200,68.69l18.34-18.35a8,8,0,0,1,11.32,11.32L211.31,80ZM128,192a12,12,0,1,0,12,12A12,12,0,0,0,128,192Zm44.71-33.47a76.05,76.05,0,0,0-89.42,0,8,8,0,0,0,9.42,12.94,60,60,0,0,1,70.58,0,8,8,0,1,0,9.42-12.94ZM135.62,64.18a8,8,0,1,0,.76-16c-2.78-.13-5.6-.2-8.38-.2A172.35,172.35,0,0,0,18.92,87,8,8,0,1,0,29.08,99.37,156.25,156.25,0,0,1,128,64C130.53,64,133.09,64.06,135.62,64.18Zm-.16,48.07a8,8,0,1,0,1.08-16c-2.83-.19-5.7-.29-8.54-.29a122.74,122.74,0,0,0-77,26.77A8,8,0,0,0,56,137a7.93,7.93,0,0,0,5-1.73A106.87,106.87,0,0,1,128,112C130.48,112,133,112.08,135.46,112.25Z"></path>
+      </svg>
+    );
+  }
+
+  // DatasetUploadError인 경우, code별로 분기
+  switch (error.code) {
+    case "INVALID_FILE_FORMAT":
+      return (
+        <svg width="56" height="56" viewBox="0 0 256 256" fill="var(--color-accent-300)" style={{ marginBottom: "var(--space-4)"}}>
+          <path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Zm-42.34-82.34L139.31,152l18.35,18.34a8,8,0,0,1-11.32,11.32L128,163.31l-18.34,18.35a8,8,0,0,1-11.32-11.32L116.69,152,98.34,133.66a8,8,0,0,1,11.32-11.32L128,140.69l18.34-18.35a8,8,0,0,1,11.32,11.32Z" />
+        </svg>
+      );
+    case "FILE_TOO_LARGE":
+      return (
+        <svg width="56" height="56" viewBox="0 0 256 256" fill="var(--color-accent-300)"style={{ marginBottom: "var(--space-4)"}} >
+          <path d="M207.06,72.67A111.24,111.24,0,0,0,128,40h-.4C66.07,40.21,16,91,16,153.13V176a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V152A111.25,111.25,0,0,0,207.06,72.67ZM224,176H119.71l54.76-75.3a8,8,0,0,0-12.94-9.42L99.92,176H32V153.13c0-3.08.15-6.12.43-9.13H56a8,8,0,0,0,0-16H35.27c10.32-38.86,44-68.24,84.73-71.66V80a8,8,0,0,0,16,0V56.33A96.14,96.14,0,0,1,221,128H200a8,8,0,0,0,0,16h23.67c.21,2.65.33,5.31.33,8Z"></path>
+        </svg>
+      );
+    case "DATASET_NOT_SUPPORTED":
+      return (
+        <svg width="56" height="56" viewBox="0 0 256 256" fill="var(--color-accent-300)"style={{ marginBottom: "var(--space-4)"}}>
+          <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm-8-80V80a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,172Z"></path>
+        </svg>
+      );
+    case "DATASET_UPLOAD_FAILED":
+      return (
+        <svg width="56" height="56" viewBox="0 0 256 256" fill="var(--color-accent-300)" style={{ marginBottom: "var(--space-4)"}}>
+         <path d="M229.66,98.34a8,8,0,0,1-11.32,11.32L200,91.31l-18.34,18.35a8,8,0,0,1-11.32-11.32L188.69,80,170.34,61.66a8,8,0,0,1,11.32-11.32L200,68.69l18.34-18.35a8,8,0,0,1,11.32,11.32L211.31,80ZM128,192a12,12,0,1,0,12,12A12,12,0,0,0,128,192Zm44.71-33.47a76.05,76.05,0,0,0-89.42,0,8,8,0,0,0,9.42,12.94,60,60,0,0,1,70.58,0,8,8,0,1,0,9.42-12.94ZM135.62,64.18a8,8,0,1,0,.76-16c-2.78-.13-5.6-.2-8.38-.2A172.35,172.35,0,0,0,18.92,87,8,8,0,1,0,29.08,99.37,156.25,156.25,0,0,1,128,64C130.53,64,133.09,64.06,135.62,64.18Zm-.16,48.07a8,8,0,1,0,1.08-16c-2.83-.19-5.7-.29-8.54-.29a122.74,122.74,0,0,0-77,26.77A8,8,0,0,0,56,137a7.93,7.93,0,0,0,5-1.73A106.87,106.87,0,0,1,128,112C130.48,112,133,112.08,135.46,112.25Z"></path>
+        </svg>
+      );
+  }
+}
+
 export default function UploadCard() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dragCounter = useRef(0);
@@ -126,7 +164,7 @@ export default function UploadCard() {
   }
 
   return (
-    <div className="card elev-sm" style={{ maxWidth: 800, padding: "var(--space-8)" }}>
+    <div className="card elev-sm" style={{ width: 500, padding: "var(--space-8)" }}>
       {phase === "idle" && (
         <>
           <div
@@ -260,13 +298,14 @@ export default function UploadCard() {
       )}
 
       {phase === "error" && error && (
-        <div>
+        <div style={{textAlign: "center"}}>
+         {getErrorIcon(error)}
           <div className="card-title" style={{ margin: 0, color: ERROR_COLOR }}>
-            업로드할 수 없습니다
+            {error.message}
           </div>
-          <p style={{ fontSize: 13, margin: "var(--space-2) 0 0" }}>{error.message}</p>
+          
           {error instanceof DatasetUploadError && error.details && (
-            <div style={{ display: "flex", gap: 6, marginTop: "var(--space-2)" }}>
+            <div style={{ display: "flex", gap: 6, marginTop: "var(--space-2)" ,justifyContent: "center"}}>
               <span className="tag tag-neutral">hasUmap: {String(error.details.hasUmap)}</span>
               <span className="tag tag-neutral">
                 hasNeighborGraph: {String(error.details.hasNeighborGraph)}
