@@ -301,9 +301,13 @@ export default function UploadCard() {
         <div style={{textAlign: "center"}}>
          {getErrorIcon(error)}
           <div className="card-title" style={{ margin: 0, color: ERROR_COLOR }}>
-            {error.message}
+            {error.message.split("(")[0].trim()}
           </div>
-          
+          {error.message.includes("(") && (
+            <p className = "text-muted" style = {{ fontSize: 14 , margin: "var(--space-2) 0 0 "}}>
+              {error.message.split("(")[1]?.replace(")","")}
+            </p>
+          )}
           {error instanceof DatasetUploadError && error.details && (
             <div style={{ display: "flex", gap: 6, marginTop: "var(--space-2)" ,justifyContent: "center"}}>
               <span className="tag tag-neutral">hasUmap: {String(error.details.hasUmap)}</span>
@@ -317,7 +321,7 @@ export default function UploadCard() {
               선택한 파일: {file.name}
             </p>
           )}
-          <div style={{ display: "flex", gap: "var(--space-2)", marginTop: "var(--space-4)" }}>
+          <div style={{ display: "flex", gap: "var(--space-2)", marginTop: "var(--space-4)" ,justifyContent: "center"}}>
             {file &&
               (error instanceof DatasetUploadNetworkError ||
                 (error instanceof DatasetUploadError && error.code === "DATASET_UPLOAD_FAILED")) && (
