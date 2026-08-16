@@ -345,16 +345,16 @@ export default function UploadCard() {
                         borderRadius: "50%",
                         background: item.ok
                           ? "color-mix(in srgb, var(--color-accent-300) 25%, transparent)"
-                          : "color-mix(in srgb, #d97c96 25%, transparent)",
+                          : "var(--color-neutral-800",
                         flexShrink: 0,
                       }}
                     >
                       {item.ok ? (
                         <svg width="12" height="12" viewBox="0 0 256 256" fill="var(--color-accent-300)">
-                          <path d="M243.28,68.24l-24-23.56a16,16,0,0,0-22.59,0L104,136.23l-36.69-35.6a16,16,0,0,0-22.58.05l-24,24a16,16,0,0,0,0,22.61l71.62,72a16,16,0,0,0,22.63,0L243.33,90.91A16,16,0,0,0,243.28,68.24ZM103.62,208,32,136l24-24a.6.6,0,0,1,.08.08l42.35,41.09a8,8,0,0,0,11.19,0L208.06,56,232,79.6Z"></path>
+                          <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
                         </svg>
                       ) : (
-                        <svg width="12" height="12" viewBox="0 0 256 256" fill="#d97c96">
+                        <svg width="12" height="12" viewBox="0 0 256 256" fill="var(--color-neutral-500)">
                           <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
                         </svg>
                       )}
@@ -365,15 +365,18 @@ export default function UploadCard() {
                   </div>
                 ))}
               </div>
-            )}
+            )
+            }
 
 
 
-            {file && (
-              <p className="text-muted" style={{ fontSize: 12, margin: "var(--space-2) 0 0" }}>
-                선택한 파일: {file.name}
-              </p>
-            )}
+            {
+              file && (
+                <p className="text-muted" style={{ fontSize: 12, margin: "var(--space-2) 0 0" }}>
+                  선택한 파일: {file.name}
+                </p>
+              )
+            }
             <div style={{ display: "flex", gap: "var(--space-2)", marginTop: "var(--space-4)", justifyContent: "center" }}>
               {file &&
                 (error instanceof DatasetUploadNetworkError ||
@@ -386,7 +389,7 @@ export default function UploadCard() {
                 다른 파일 선택
               </button>
             </div>
-          </div>
+          </div >
         )
       }
     </div >
