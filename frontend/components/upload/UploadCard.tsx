@@ -264,112 +264,131 @@ export default function UploadCard() {
       )}
 
       {phase === "success" && success && (
-        <div>
+        <div style={{ textAlign: "center" }}>
+          <svg width="48" height="48" viewBox="0 0 256 256" fill="var(--color-accent-300)" style={{ marginBottom: "var(--space-3)" }}>
+            <path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z" />
+          </svg>
           <div className="card-title" style={{ margin: 0 }}>
             데이터셋 업로드 완료
           </div>
-          <dl
+
+          <span
             style={{
-              display: "grid",
-              gridTemplateColumns: "auto 1fr",
-              rowGap: 6,
-              columnGap: 12,
-              fontSize: 13,
-              margin: "var(--space-3) 0 var(--space-4)",
+              display: "inline-block",
+              background: success.hasLeiden
+                ? "color-mix(in srgb, var(--color-accent-300) 20%, transparent)"
+                : "var(--color-neutral-800)",
+              color: success.hasLeiden ? "var(--color-accent-300)" : "var(--color-neutral-400)",
+              fontSize: 12,
+              padding: "4px 12px",
+              borderRadius: 999,
+              marginTop: "var(--space-3)",
             }}
           >
-            <dt className="text-muted">데이터셋 ID</dt>
-            <dd style={{ margin: 0 }}>{success.datasetId}</dd>
-            <dt className="text-muted">파일명</dt>
-            <dd style={{ margin: 0 }}>{success.fileName}</dd>
-            <dt className="text-muted">파일 크기</dt>
-            <dd style={{ margin: 0 }}>{success.fileSize.toLocaleString("ko-KR")} KB</dd>
-            <dt className="text-muted">세포 수</dt>
-            <dd style={{ margin: 0 }}>{success.cellCount.toLocaleString("ko-KR")}</dd>
-            <dt className="text-muted">유전자 수</dt>
-            <dd style={{ margin: 0 }}>{success.geneCount.toLocaleString("ko-KR")}</dd>
-            <dt className="text-muted">기존 Leiden 결과</dt>
-            <dd style={{ margin: 0 }}>{success.hasLeiden ? "있음" : "없음"}</dd>
+            {success.hasLeiden ? "클러스터링 완료" : "클러스터링 대기 중"}
+          </span>
+
+          <p className="text-muted" style={{ fontSize: 13, margin: "var(--space-3) 0 0" }}>
+            세포 수 {success.cellCount.toLocaleString("ko-KR")} · 유전자 수 {success.geneCount.toLocaleString("ko-KR")}
+          </p>
+
+          <div style={{ borderTop: "1px solid var(--color-divider)", margin: "var(--space-3) 0" }} />
+          <dl style={{ fontSize: 13, textAlign: "left" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "4px 0" }}>
+              <dt className="text-muted">파일명</dt>
+              <dd style={{ margin: 0 }}>{success.fileName}</dd>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "4px 0" }}>
+              <dt className="text-muted">데이터셋 ID</dt>
+              <dd style={{ margin: 0 }}>{success.datasetId}</dd>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "4px 0" }}>
+              <dt className="text-muted">파일 크기</dt>
+              <dd style={{ margin: 0 }}>{success.fileSize.toLocaleString("ko-KR")} KB</dd>
+            </div>
           </dl>
-          <button type="button" className="btn btn-secondary" onClick={reset}>
+          <button type="button" className="btn btn-secondary btn-block" onClick={reset}>
             다른 파일 업로드
           </button>
         </div>
-      )}
+      )
+      }
 
-      {phase === "error" && error && (
-        <div style={{ textAlign: "center" }}>
-          {getErrorIcon(error)}
-          <div className="card-title" style={{ margin: 0, color: ERROR_COLOR }}>
-            {error.message.split("(")[0].trim()}
-          </div>
-          {error.message.includes("(") && (
-            <p className="text-muted" style={{ fontSize: 14, margin: "var(--space-2) 0 0 " }}>
-              {error.message.split("(")[1]?.replace(")", "")}
-            </p>
-          )}
-
-
-          {error instanceof DatasetUploadError && error.details && (
-            <div style={{ display: "inline-flex", flexDirection: "column", gap: 8, marginTop: "var(--space-3)" }}>
-              {[
-                { label: "UMAP 좌표", ok: error.details.hasUmap },
-                { label: "Neighbor Graph", ok: error.details.hasNeighborGraph },
-              ].map((item) => (
-                <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 18,
-                      height: 18,
-                      borderRadius: "50%",
-                      background: item.ok
-                        ? "color-mix(in srgb, var(--color-accent-300) 25%, transparent)"
-                        : "color-mix(in srgb, #d97c96 25%, transparent)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {item.ok ? (
-                      <svg width="12" height="12" viewBox="0 0 256 256" fill="var(--color-accent-300)">
-                        <path d="M243.28,68.24l-24-23.56a16,16,0,0,0-22.59,0L104,136.23l-36.69-35.6a16,16,0,0,0-22.58.05l-24,24a16,16,0,0,0,0,22.61l71.62,72a16,16,0,0,0,22.63,0L243.33,90.91A16,16,0,0,0,243.28,68.24ZM103.62,208,32,136l24-24a.6.6,0,0,1,.08.08l42.35,41.09a8,8,0,0,0,11.19,0L208.06,56,232,79.6Z"></path>
-                      </svg>
-                    ) : (
-                      <svg width="12" height="12" viewBox="0 0 256 256" fill="#d97c96">
-                        <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
-                      </svg>
-                    )}
-
-                  </span>
-
-                  <span style={{ fontSize: 13 }}>{item.label}</span>
-                </div>
-              ))}
+      {
+        phase === "error" && error && (
+          <div style={{ textAlign: "center" }}>
+            {getErrorIcon(error)}
+            <div className="card-title" style={{ margin: 0, color: ERROR_COLOR }}>
+              {error.message.split("(")[0].trim()}
             </div>
-          )}
+            {error.message.includes("(") && (
+              <p className="text-muted" style={{ fontSize: 14, margin: "var(--space-2) 0 0 " }}>
+                {error.message.split("(")[1]?.replace(")", "")}
+              </p>
+            )}
+
+
+            {error instanceof DatasetUploadError && error.details && (
+              <div style={{ display: "inline-flex", flexDirection: "column", gap: 8, marginTop: "var(--space-3)" }}>
+                {[
+                  { label: "UMAP 좌표", ok: error.details.hasUmap },
+                  { label: "Neighbor Graph", ok: error.details.hasNeighborGraph },
+                ].map((item) => (
+                  <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 18,
+                        height: 18,
+                        borderRadius: "50%",
+                        background: item.ok
+                          ? "color-mix(in srgb, var(--color-accent-300) 25%, transparent)"
+                          : "color-mix(in srgb, #d97c96 25%, transparent)",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {item.ok ? (
+                        <svg width="12" height="12" viewBox="0 0 256 256" fill="var(--color-accent-300)">
+                          <path d="M243.28,68.24l-24-23.56a16,16,0,0,0-22.59,0L104,136.23l-36.69-35.6a16,16,0,0,0-22.58.05l-24,24a16,16,0,0,0,0,22.61l71.62,72a16,16,0,0,0,22.63,0L243.33,90.91A16,16,0,0,0,243.28,68.24ZM103.62,208,32,136l24-24a.6.6,0,0,1,.08.08l42.35,41.09a8,8,0,0,0,11.19,0L208.06,56,232,79.6Z"></path>
+                        </svg>
+                      ) : (
+                        <svg width="12" height="12" viewBox="0 0 256 256" fill="#d97c96">
+                          <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+                        </svg>
+                      )}
+
+                    </span>
+
+                    <span style={{ fontSize: 13 }}>{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
 
 
-          {file && (
-            <p className="text-muted" style={{ fontSize: 12, margin: "var(--space-2) 0 0" }}>
-              선택한 파일: {file.name}
-            </p>
-          )}
-          <div style={{ display: "flex", gap: "var(--space-2)", marginTop: "var(--space-4)", justifyContent: "center" }}>
-            {file &&
-              (error instanceof DatasetUploadNetworkError ||
-                (error instanceof DatasetUploadError && error.code === "DATASET_UPLOAD_FAILED")) && (
-                <button type="button" className="btn btn-primary" onClick={() => submit(file)}>
-                  다시 시도
-                </button>
-              )}
-            <button type="button" className="btn btn-secondary" onClick={reset}>
-              다른 파일 선택
-            </button>
+            {file && (
+              <p className="text-muted" style={{ fontSize: 12, margin: "var(--space-2) 0 0" }}>
+                선택한 파일: {file.name}
+              </p>
+            )}
+            <div style={{ display: "flex", gap: "var(--space-2)", marginTop: "var(--space-4)", justifyContent: "center" }}>
+              {file &&
+                (error instanceof DatasetUploadNetworkError ||
+                  (error instanceof DatasetUploadError && error.code === "DATASET_UPLOAD_FAILED")) && (
+                  <button type="button" className="btn btn-primary" onClick={() => submit(file)}>
+                    다시 시도
+                  </button>
+                )}
+              <button type="button" className="btn btn-secondary" onClick={reset}>
+                다른 파일 선택
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 }
