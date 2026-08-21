@@ -1,5 +1,7 @@
 // Client for POST /api/datasets — see docs/api.md "1. 데이터셋 업로드 및 검사".
 
+
+
 export type DatasetUploadSuccess = {
   datasetId: string;
   fileName: string;
@@ -44,8 +46,7 @@ export class DatasetUploadError extends Error {
   }
 }
 
-// The request never reached the server (offline, CORS, server down, DNS...).
-// Distinct from DatasetUploadError because no documented error code applies.
+
 export class DatasetUploadNetworkError extends Error {
   constructor() {
     super("서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
@@ -60,9 +61,7 @@ export const DOC_ERROR_MESSAGES = {
   FILE_TOO_LARGE: "업로드 가능한 최대 파일 크기를 초과했습니다.",
 } as const satisfies Partial<Record<DatasetErrorCode, string>>;
 
-// Checks the two conditions the client can rule out without a round trip.
-// FILE_TOO_LARGE and INVALID_FILE_FORMAT can therefore surface instantly;
-// DATASET_NOT_SUPPORTED and DATASET_UPLOAD_FAILED can only come from the server.
+
 export function validateFileLocally(file: File): DatasetUploadError | null {
   if (!file.name.toLowerCase().endsWith(".h5ad")) {
     return new DatasetUploadError("INVALID_FILE_FORMAT", DOC_ERROR_MESSAGES.INVALID_FILE_FORMAT);
@@ -73,14 +72,10 @@ export function validateFileLocally(file: File): DatasetUploadError | null {
   return null;
 }
 
-// NOTE: the backend for this endpoint lives on a teammate's branch and isn't
-// merged here yet, so the multipart field name ("file") and base URL are our
-// best guess from docs/api.md — confirm both once the branches are combined.
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
-// Uses XMLHttpRequest (not fetch) because it's the only API with upload
-// progress events, and h5ad files can be large enough (up to ~2GB) that
-// progress feedback matters.
+
 export function uploadDataset(
   file: File,
   onProgress?: (percent: number) => void,
@@ -133,4 +128,23 @@ export function uploadDataset(
     formData.append("file", file);
     xhr.send(formData);
   });
+}
+
+export type UmapResponse = {
+  datasetId: string;
+  cellCount: number;
+  points: [number, number][];
+};
+
+export async function fetchUmap(datasetId: string): Promise<UmapResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/datasets/${datasetId}/umap`);
+
+  if (!res.ok) {
+    if (res.status === 404) {
+      throw new Error("해당 데이터셋을 찾을 수 없습니다.");
+    }
+    throw new Error("UMAP 데이터를 불러오는 중 오류가 발생했습니다.");
+  }
+
+  return res.json();
 }
