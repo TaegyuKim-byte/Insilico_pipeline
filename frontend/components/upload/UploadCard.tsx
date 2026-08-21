@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   DatasetUploadError,
   DatasetUploadNetworkError,
@@ -52,6 +53,7 @@ function getErrorIcon(error: DatasetUploadError | DatasetUploadNetworkError) {
 }
 
 export default function UploadCard() {
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const dragCounter = useRef(0);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -307,6 +309,9 @@ export default function UploadCard() {
               <dd style={{ margin: 0 }}>{success.fileSize.toLocaleString("ko-KR")} KB</dd>
             </div>
           </dl>
+          <button type="button" className="btn btn-primary btn-block" onClick={() => router.push(`/datasets/${success.datasetId}`)}>
+            UMAP 결과 조회
+          </button>
           <button type="button" className="btn btn-secondary btn-block" onClick={reset}>
             다른 파일 업로드
           </button>
