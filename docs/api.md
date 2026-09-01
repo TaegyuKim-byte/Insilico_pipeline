@@ -40,7 +40,7 @@
 | --- | --- | --- |
 | 400 Bad Request | INVALID_FILE_FORMAT | `.h5ad` 형식이 아님 |
 | 413 Payload Too Large | FILE_TOO_LARGE | 최대 허용 파일 크기 초과 |
-| 422 Unprocessable Entity | DATASET_NOT_SUPPORTED | 서비스에서 요구하는 데이터 구조를 만족하지 않음 (UMAP 또는 Neighbor Graph 없음) |
+| 422 Unprocessable Entity | DATASET_NOT_SUPPORTED | 서비스에서 요구하는 데이터 구조를 만족하지 않음 (`X_umap` 없음, 2차원 좌표 형식이 아님 또는 Neighbor Graph 없음) |
 | 500 Internal Server Error | DATASET_UPLOAD_FAILED | 파일 저장 또는 메타데이터 추출 중 오류 발생 |
 1. 지원하지 않는 파일 형식 (`.h5ad` 파일이 아닐 경우)
 
@@ -60,7 +60,7 @@
 }
 ```
 
-3. 서비스에서 사용할 수 없는 데이터셋(UMAP 또는 이웃그래프가 없음)
+3. 서비스에서 사용할 수 없는 데이터셋(`X_umap`이 없거나 2차원 좌표 형식이 아님 또는 이웃그래프가 없음)
 
 ```json
 {
@@ -102,7 +102,7 @@
 | --- | --- | --- |
 | `datasetId` | String | 데이터셋 식별자 |
 | `cellCount` | Integer | 반환된 세포 수 |
-| `points` | Array | UMAP 좌표 배열 |
+| `points` | Array | `[x, y]` 형식의 2차원 UMAP 좌표 배열. 모든 좌표는 유한한 숫자 |
 
 ```json
 {
@@ -122,12 +122,14 @@ points[i][0] = i번째 세포의 x 좌표
 points[i][1] = i번째 세포의 y 좌표
 ```
 
+`points`에는 `NaN`, `Infinity`, `-Infinity`가 포함되지 않습니다.
+
 **실패 조건**
 
 | HTTP Status | 오류 코드 | 설명 |
 | --- | --- | --- |
 | 404 Not Found | DATASET_NOT_FOUND | 요청한 datasetId가 존재하지 않음   |
-| 500 Internal Server Error | UMAP_LOAD_FAILED | 파일 손상이나 저장 오류 또는 서버 자체의 오류 |
+| 500 Internal Server Error | UMAP_LOAD_FAILED | 파일 손상, 저장 오류, 잘못된 UMAP 배열 또는 유효하지 않은 좌표가 발견됨 |
 1. 데이터셋을 찾을 수 없음
 
 ```json
@@ -137,7 +139,7 @@ points[i][1] = i번째 세포의 y 좌표
 }
 ```
 
-2. 서버 자체의 오류
+2. UMAP 데이터를 불러올 수 없음
 
 ```json
 {
