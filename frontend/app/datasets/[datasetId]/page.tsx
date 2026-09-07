@@ -111,11 +111,11 @@ export default function DatasetPage({
                         type="button"
                         onClick={() => console.log("클러스터링 실행 (resolution:", resolution, ") — API 연결 예정")}
                         style={{
-                            padding: "var(--space-2) var(--space-3)",
-                            borderRadius: 6,
+                            padding: "var(--space-3) var(--space-3)",
+                            borderRadius: 8,
                             border: "1px solid var(--color-divider)",
-                            background: "#9184d9",
-                            color: "#1a1a1f",
+                            background: "transparent",
+                            color: "var(--color-text)",
                             fontWeight: 600,
                             cursor: "pointer",
                         }}
