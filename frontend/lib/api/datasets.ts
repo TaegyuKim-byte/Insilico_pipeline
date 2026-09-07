@@ -148,3 +148,64 @@ export async function fetchUmap(datasetId: string): Promise<UmapResponse> {
 
   return res.json();
 }
+
+// Client for POST /api/datasets/{datasetId}/analyses/clustering
+// — see docs/api.md "3. Leiden 클러스터링 실행".
+
+export type ClusteringResult = {
+  datasetId: string;
+  resolution: number;
+  clusterCount: number;
+  labels: number[];
+};
+
+export type ClusteringErrorCode = "INVALID_RESOLUTION" | "DATASET_NOT_FOUND" | "CLUSTERING_FAILED";
+
+const CLUSTERING_ERROR_CODES: readonly ClusteringErrorCode[] = [
+  "INVALID_RESOLUTION",
+  "DATASET_NOT_FOUND",
+  "CLUSTERING_FAILED",
+];
+
+function isClusteringErrorCode(value: unknown): value is ClusteringErrorCode {
+  return typeof value === "string" && (CLUSTERING_ERROR_CODES as readonly string[]).includes(value);
+}
+
+export class ClusteringError extends Error {
+  code: ClusteringErrorCode;
+
+  constructor(code: ClusteringErrorCode, message: string) {
+    super(message);
+    this.name = "ClusteringError";
+    this.code = code;
+  }
+}
+
+export const MIN_RESOLUTION = 0.1;
+export const MAX_RESOLUTION = 2.0;
+export const DEFAULT_RESOLUTION = 1.0;
+
+export async function runClustering(datasetId: string, resolution: number): Promise<ClusteringResult> {
+  const res = await fetch(`${API_BASE_URL}/api/datasets/${datasetId}/analyses/clustering`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ resolution }),
+  });
+
+  if (res.ok) {
+    return res.json();
+  }
+
+  let body: unknown = null;
+  try {
+    body = await res.json();
+  } catch {
+    // fall through with body === null
+  }
+
+  const parsed = body as { code?: unknown; message?: unknown } | null;
+  const code = isClusteringErrorCode(parsed?.code) ? parsed.code : "CLUSTERING_FAILED";
+  const message =
+    typeof parsed?.message === "string" ? parsed.message : "클러스터링 실행 중 오류가 발생했습니다.";
+  throw new ClusteringError(code, message);
+}
