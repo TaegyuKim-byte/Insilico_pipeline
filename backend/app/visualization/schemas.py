@@ -8,5 +8,7 @@ class UmapResponse(BaseModel):
     """
 
     datasetId: str
+    fileName: str
     cellCount: int
+    geneCount: int
     points: list[list[float]]
