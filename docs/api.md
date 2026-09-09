@@ -84,7 +84,7 @@
 
 ### 2. UMAP 데이터 조회
 
-**목적:**  업로드된 데이터셋의 UMAP 좌표를 조회합니다. 클러스터 정보 없이 좌표만 반환하며 화면에는 하나의 색(검은색) 으로 표시됩니다.
+**목적:** 업로드된 데이터셋의 UMAP 좌표와 원본 파일명, 세포 수, 유전자 수를 조회합니다. 클러스터 정보는 포함하지 않으며 UMAP은 단색으로 표시합니다.
 
 **HTTP Method:** `GET /api/datasets/{datasetId}/umap` 
 
@@ -101,13 +101,17 @@
 | 필드 | 타입 | 설명 |
 | --- | --- | --- |
 | `datasetId` | String | 데이터셋 식별자 |
+| `fileName` | String | 업로드한 원본 파일명 (서버 저장용 파일명이 아님) |
 | `cellCount` | Integer | 반환된 세포 수 |
+| `geneCount` | Integer | 데이터셋의 유전자 수 |
 | `points` | Array | `[x, y]` 형식의 2차원 UMAP 좌표 배열. 모든 좌표는 유한한 숫자 |
 
 ```json
 {
 	"datasetId": "ds_001",
+	"fileName": "pbmc.h5ad",
 	"cellCount": 2638,
+	"geneCount": 1838,
 	"points": [
 		[1.24, -0.53],
     [0.91, -0.87],

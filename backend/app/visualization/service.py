@@ -39,7 +39,9 @@ def get_umap(dataset_id: str, db: Session) -> UmapResponse:
 
     try:
         adata = ad.read_h5ad(dataset.file_path, backed="r")
-        coordinates = adata.obsm["X_umap"]
+        # X_umap 데이터를 일관된 NumPy 배열 형식으로 변환해줌
+        # Dataframe, NumPy 형식의 X_umap만 지원함을 명시해주어야할 듯 (희소행렬 지원 X)
+        coordinates = np.asarray(adata.obsm["X_umap"])
 
         # UMAP 좌표가 2차원이 아닌 경우
         if coordinates.shape != (adata.n_obs, 2):
@@ -65,6 +67,8 @@ def get_umap(dataset_id: str, db: Session) -> UmapResponse:
 
     return UmapResponse(
         datasetId=dataset.dataset_id,
+        fileName=dataset.file_name,
         cellCount=len(points),
+        geneCount=dataset.gene_count,
         points=points,
     )
