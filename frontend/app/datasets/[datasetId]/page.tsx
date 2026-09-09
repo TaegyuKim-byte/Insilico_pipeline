@@ -30,7 +30,7 @@ const CLUSTER_COLORS = [
     "#5a7fd9",
 ];
 
-const DEFAULT_POINT_COLOR = "#9184d9";
+const DEFAULT_POINT_COLOR = "#000000";
 
 function colorForLabel(label: number): string {
     const idx = ((label % CLUSTER_COLORS.length) + CLUSTER_COLORS.length) % CLUSTER_COLORS.length;
@@ -41,9 +41,7 @@ function clampResolution(v: number): number {
     return Math.min(MAX_RESOLUTION, Math.max(MIN_RESOLUTION, v));
 }
 
-// 숫자 입력 + 알약 스텝퍼 + 트랙 위 말풍선 값이 달린 슬라이더.
-// 실제 드래그/키보드 조작은 투명하게 깐 네이티브 range input이 담당하고,
-// 보이는 트랙/채움/핸들/말풍선은 그 위에 얹은 시각 레이어일 뿐이다.
+
 function ResolutionControl({
     value,
     onChange,
@@ -90,7 +88,7 @@ function ResolutionControl({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    background: "#1a1a20",
+                    background: "var(--color-surface)",
                     border: "1px solid var(--color-divider)",
                     borderRadius: 999,
                     padding: "6px 8px 6px 14px",
@@ -228,7 +226,7 @@ function ResolutionControl({
                             height: 18,
                             borderRadius: "50%",
                             background: "#9184d9",
-                            border: "3px solid var(--color-bg, #121218)",
+                            border: "3px solid var(--color-bg, #ffffff)",
                             boxShadow: "0 0 0 1px rgba(255,255,255,0.18)",
                             transform: "translateX(-50%)",
                             pointerEvents: "none",
@@ -408,7 +406,7 @@ export default function DatasetPage({
                         </button>
 
                         {clusteringError && (
-                            <p style={{ color: "#d97c96", fontSize: 13, margin: 0 }}>{clusteringError}</p>
+                            <p style={{ color: "#c2415f", fontSize: 13, margin: 0 }}>{clusteringError}</p>
                         )}
 
                         {clustering && (
@@ -426,7 +424,7 @@ export default function DatasetPage({
 
                 <div style={{ flex: 1, padding: "var(--space-6)" }}>
                     {loading && <p className="text-muted">UMAP 데이터를 불러오는 중...</p>}
-                    {error && <p style={{ color: "#d97c96" }}>{error}</p>}
+                    {error && <p style={{ color: "#c2415f" }}>{error}</p>}
                     {umap && (
                         <Plot
                             data={[
@@ -446,7 +444,7 @@ export default function DatasetPage({
                             layout={{
                                 paper_bgcolor: "transparent",
                                 plot_bgcolor: "transparent",
-                                font: { color: "#e9e9ed" },
+                                font: { color: "#292b31" },
                                 xaxis: { showgrid: false, zeroline: false },
                                 yaxis: { showgrid: false, zeroline: false },
                                 margin: { l: 40, r: 20, t: 20, b: 40 },
