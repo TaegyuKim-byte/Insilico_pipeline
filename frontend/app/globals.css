@@ -1,9 +1,9 @@
 :root {
   --color-bg: #ffffff;
-  --color-surface: #f3f5fe;
+  --color-surface: #f5f5f5;
   --color-text: #292b31;
-  --color-accent: #5d5294;
-  --color-accent-2: #796cbf;
+  --color-accent: #000000;
+  --color-accent-2: #2b2b2b;
   --color-divider: color-mix(in srgb, var(--color-text) 14%, transparent);
 
 
@@ -17,18 +17,18 @@
   --color-neutral-800: #3f424d;
   --color-neutral-900: #292b31;
 
-  --color-accent-100: #f5f4ff;
-  --color-accent-200: #e7e5fe;
-  --color-accent-300: #d2cefd;
-  --color-accent-400: #b5abfc;
-  --color-accent-500: #968ae0;
-  --color-accent-600: #796cbf;
-  --color-accent-700: #5d5294;
-  --color-accent-800: #423a6a;
-  --color-accent-900: #2b2741;
+  --color-accent-100: #f2f2f2;
+  --color-accent-200: #e0e0e0;
+  --color-accent-300: #c2c2c2;
+  --color-accent-400: #999999;
+  --color-accent-500: #707070;
+  --color-accent-600: #4d4d4d;
+  --color-accent-700: #2b2b2b;
+  --color-accent-800: #141414;
+  --color-accent-900: #000000;
 
   --font-heading: var(--font-inter), system-ui, sans-serif;
-  --font-heading-weight: 500;
+  --font-heading-weight: 600;
   --font-body: var(--font-inter), system-ui, sans-serif;
 
   --space-1: 2.8px;
@@ -163,16 +163,19 @@ a {
 }
 
 .btn-primary {
-  color: var(--color-accent);
+  color: var(--color-bg);
+  background: var(--color-accent);
   border-color: var(--color-accent);
 }
 
 .btn-primary:hover {
-  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  background: var(--color-accent-800);
+  border-color: var(--color-accent-800);
 }
 
 .btn-primary:active {
-  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  background: var(--color-accent-700);
+  border-color: var(--color-accent-700);
 }
 
 .btn-secondary {
