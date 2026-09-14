@@ -89,7 +89,7 @@ function ResolutionControl({
                     alignItems: "center",
                     justifyContent: "space-between",
                     background: "var(--color-surface)",
-                    border: "1px solid var(--color-divider)",
+                    border: "1px solid var(--color-accent)",
                     borderRadius: 999,
                     padding: "6px 8px 6px 14px",
                 }}
@@ -103,9 +103,9 @@ function ResolutionControl({
                         width: 22,
                         height: 22,
                         borderRadius: "50%",
-                        border: "none",
+                        border: "1px solid var(--color-accent)",
                         background: "transparent",
-                        color: "#8b8b96",
+                        color: "var(--color-accent)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -155,7 +155,7 @@ function ResolutionControl({
                         width: 22,
                         height: 22,
                         borderRadius: "50%",
-                        border: "1px solid var(--color-divider)",
+                        border: "1px solid var(--color-accnet)",
                         background: "transparent",
                         color: "var(--color-text)",
                         display: "flex",
@@ -183,7 +183,7 @@ function ResolutionControl({
                             left: 0,
                             height: 6,
                             borderRadius: 999,
-                            background: "#9184d9",
+                            background: "var(--color-accent)",
                             width: `${pct}%`,
                         }}
                     />
@@ -194,8 +194,8 @@ function ResolutionControl({
                             top: -30,
                             left: `${pct}%`,
                             transform: "translateX(-50%)",
-                            background: "#9184d9",
-                            color: "#16151f",
+                            background: "var(--color-accent)",
+                            color: "#ffffff",
                             fontSize: 11,
                             fontWeight: 700,
                             padding: "3px 7px",
@@ -213,7 +213,7 @@ function ResolutionControl({
                                 transform: "translateX(-50%) rotate(45deg)",
                                 width: 6,
                                 height: 6,
-                                background: "#9184d9",
+                                background: "var(--color-accent)",
                             }}
                         />
                     </div>
@@ -225,7 +225,7 @@ function ResolutionControl({
                             width: 18,
                             height: 18,
                             borderRadius: "50%",
-                            background: "#9184d9",
+                            background: "var(--color-accent)",
                             border: "3px solid var(--color-bg, #ffffff)",
                             boxShadow: "0 0 0 1px rgba(255,255,255,0.18)",
                             transform: "translateX(-50%)",
@@ -394,7 +394,7 @@ export default function DatasetPage({
                             style={{
                                 padding: "var(--space-3) var(--space-3)",
                                 borderRadius: 8,
-                                border: "1px solid var(--color-divider)",
+                                border: "1px solid var(--color-accent)",
                                 background: "transparent",
                                 color: "var(--color-text)",
                                 fontWeight: 600,
