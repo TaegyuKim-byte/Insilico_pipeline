@@ -267,7 +267,7 @@ export default function UploadCard() {
 
       {phase === "success" && success && (
         <div style={{ textAlign: "center" }}>
-          <svg width="48" height="48" viewBox="0 0 256 256" fill="var(--color-accent-300)" style={{ marginBottom: "var(--space-3)" }}>
+          <svg width="48" height="48" viewBox="0 0 256 256" fill="000000" style={{ marginBottom: "var(--space-3)" }}>
             <path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z" />
           </svg>
           <div className="card-title" style={{ margin: 0 }}>
@@ -280,7 +280,7 @@ export default function UploadCard() {
               background: success.hasLeiden
                 ? "color-mix(in srgb, var(--color-accent-300) 20%, transparent)"
                 : "var(--color-neutral-800)",
-              color: success.hasLeiden ? "var(--color-accent-300)" : "var(--color-neutral-400)",
+              color: success.hasLeiden ? "var(--color-accent-300)" : "#ffffff",
               fontSize: 12,
               padding: "4px 12px",
               borderRadius: 999,
@@ -295,7 +295,7 @@ export default function UploadCard() {
           </p>
 
           <div style={{ borderTop: "1px solid var(--color-divider)", margin: "var(--space-3) 0" }} />
-          <dl style={{ fontSize: 13, textAlign: "left" }}>
+          <dl style={{ fontSize: 14, textAlign: "left" }}>
             <div style={{ display: "flex", justifyContent: "space-between", padding: "4px 0" }}>
               <dt className="text-muted">파일명</dt>
               <dd style={{ margin: 0 }}>{success.fileName}</dd>
@@ -309,10 +309,10 @@ export default function UploadCard() {
               <dd style={{ margin: 0 }}>{success.fileSize.toLocaleString("ko-KR")} KB</dd>
             </div>
           </dl>
-          <button type="button" className="btn btn-primary btn-block" onClick={() => router.push(`/datasets/${success.datasetId}`)}>
+          <button type="button" className="btn btn-primary btn-block" style={{ background: "transparent", color: "var(--color-accent)" }} onClick={() => router.push(`/datasets/${success.datasetId}`)}>
             UMAP 결과 조회
           </button>
-          <button type="button" className="btn btn-secondary btn-block" onClick={reset}>
+          <button type="button" className="btn btn-secondary btn-block" style={{ borderColor: "var(--color-accnet)" }} onClick={reset}>
             다른 파일 업로드
           </button>
         </div>
