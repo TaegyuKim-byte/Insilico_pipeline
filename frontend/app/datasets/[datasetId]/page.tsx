@@ -6,11 +6,13 @@ import dynamic from "next/dynamic";
 import {
     fetchUmap,
     runClustering,
+    fetchDatasetInfo,
     MIN_RESOLUTION,
     MAX_RESOLUTION,
     DEFAULT_RESOLUTION,
     type UmapResponse,
     type ClusteringResult,
+    type DatasetInfo,
 } from "@/lib/api/datasets";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
@@ -155,7 +157,7 @@ function ResolutionControl({
                         width: 22,
                         height: 22,
                         borderRadius: "50%",
-                        border: "1px solid var(--color-accnet)",
+                        border: "1px solid var(--color-accent)",
                         background: "transparent",
                         color: "var(--color-text)",
                         display: "flex",
@@ -176,7 +178,7 @@ function ResolutionControl({
             {/* 트랙 + 말풍선 값 + (투명) 드래그 가능한 실제 range input */}
             <div style={{ paddingTop: 30 }}>
                 <div style={{ position: "relative", height: 18, display: "flex", alignItems: "center" }}>
-                    <div style={{ position: "absolute", left: 0, right: 0, height: 6, borderRadius: 999, background: "var(--color-divider)" }} />
+                    <div style={{ position: "absolute", left: 0, right: 0, height: 6, borderRadius: 999, background: "#e0e0e0" }} />
                     <div
                         style={{
                             position: "absolute",
@@ -300,6 +302,7 @@ export default function DatasetPage({
 
     const [umap, setUmap] = useState<UmapResponse | null>(null);
     const [loading, setLoading] = useState(true);
+    const [datasetInfo, setDatasetInfo] = useState<DatasetInfo | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     const [resolution, setResolution] = useState(DEFAULT_RESOLUTION);
@@ -322,6 +325,17 @@ export default function DatasetPage({
             })
             .finally(() => {
                 setLoading(false);
+            });
+    }, [datasetId]);
+
+    useEffect(() => {
+        fetchDatasetInfo(datasetId)
+            .then((data) => {
+                console.log("datasetInfo 응답:", data);
+                setDatasetInfo(data);
+            })
+            .catch((err) => {
+                console.error("fetchDatasetInfo 실패:", err);
             });
     }, [datasetId]);
 
@@ -363,7 +377,7 @@ export default function DatasetPage({
                         ←
                     </button>
                     <span className="text-muted" style={{ fontSize: 12 }}>
-                        {datasetId}
+                        {datasetInfo?.fileName ?? datasetId}
                     </span>
                 </div>
             </header>

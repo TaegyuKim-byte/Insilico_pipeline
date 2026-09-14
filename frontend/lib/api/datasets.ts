@@ -1,7 +1,6 @@
 // Client for POST /api/datasets — see docs/api.md "1. 데이터셋 업로드 및 검사".
 
 
-
 export type DatasetUploadSuccess = {
   datasetId: string;
   fileName: string;
@@ -208,4 +207,22 @@ export async function runClustering(datasetId: string, resolution: number): Prom
   const message =
     typeof parsed?.message === "string" ? parsed.message : "클러스터링 실행 중 오류가 발생했습니다.";
   throw new ClusteringError(code, message);
+}
+
+export type DatasetInfo = {
+  datasetId: string;
+  fileName: string;
+  fileSize: number; // KB
+  cellCount: number;
+  geneCount: number;
+  hasLeiden: boolean;
+};
+
+export async function fetchDatasetInfo(datasetId: string): Promise<DatasetInfo> {
+  const res = await fetch(`${API_BASE_URL}/api/datasets/${datasetId}`);
+  if (!res.ok) {
+    if (res.status === 404) throw new Error("해당 데이터셋을 찾을 수 없습니다.");
+    throw new Error("데이터셋 정보를 불러오는 중 오류가 발생했습니다.");
+  }
+  return res.json();
 }
