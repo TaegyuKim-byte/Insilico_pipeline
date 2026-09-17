@@ -6,13 +6,11 @@ import dynamic from "next/dynamic";
 import {
     fetchUmap,
     runClustering,
-    fetchDatasetInfo,
     MIN_RESOLUTION,
     MAX_RESOLUTION,
     DEFAULT_RESOLUTION,
     type UmapResponse,
     type ClusteringResult,
-    type DatasetInfo,
 } from "@/lib/api/datasets";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
@@ -43,6 +41,110 @@ function clampResolution(v: number): number {
     return Math.min(MAX_RESOLUTION, Math.max(MIN_RESOLUTION, v));
 }
 
+function DatasetMetaCard({ umap }: { umap: UmapResponse }) {
+    return (
+        <div style={{ border: "1px solid var(--color-accent)", borderRadius: "var(--radius-md)", overflow: "hidden" }}>
+            <div
+                style={{
+                    background: "var(--color-accent)",
+                    padding: "10px 14px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 8,
+                }}
+            >
+                <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 2v6h6" />
+                    </svg>
+                    <span
+                        style={{
+                            color: "#ffffff",
+                            fontWeight: 700,
+                            fontSize: 13,
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                        }}
+                    >
+                        {umap.fileName}
+                    </span>
+                </div>
+                <span
+                    style={{
+                        flexShrink: 0,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        letterSpacing: "0.04em",
+                        color: "#ffffff",
+                        border: "1px solid #ffffff",
+                        borderRadius: 999,
+                        padding: "2px 8px",
+                    }}
+                >
+                    LOADED
+                </span>
+            </div>
+
+            <div style={{ display: "flex" }}>
+                <div style={{ flex: 1, padding: "var(--space-4)", textAlign: "center" }}>
+                    <div style={{ fontSize: 26, fontWeight: 700, color: "var(--color-text)", lineHeight: 1.15 }}>
+                        {umap.cellCount.toLocaleString("ko-KR")}
+                    </div>
+                    <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: "rgba(41,43,49,0.55)", marginTop: 2 }}>
+                        CELLS
+                    </div>
+                </div>
+                <div style={{ width: 1, background: "var(--color-divider)" }} />
+                <div style={{ flex: 1, padding: "var(--space-4)", textAlign: "center" }}>
+                    <div style={{ fontSize: 26, fontWeight: 700, color: "var(--color-text)", lineHeight: 1.15 }}>
+                        {umap.geneCount.toLocaleString("ko-KR")}
+                    </div>
+                    <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: "rgba(41,43,49,0.55)", marginTop: 2 }}>
+                        GENES
+                    </div>
+                </div>
+            </div>
+
+            <div style={{ borderTop: "1px solid var(--color-divider)" }} />
+
+            <div style={{ display: "flex", gap: 8, padding: "10px 14px", flexWrap: "wrap" }}>
+                <span
+                    style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        fontSize: 11,
+                        color: "var(--color-text)",
+                        border: "1px solid var(--color-divider)",
+                        borderRadius: 999,
+                        padding: "4px 10px",
+                    }}
+                >
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--color-accent)" }} />
+                    Neighbor graph
+                </span>
+                <span
+                    style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        fontSize: 11,
+                        color: "var(--color-text)",
+                        border: "1px solid var(--color-divider)",
+                        borderRadius: 999,
+                        padding: "4px 10px",
+                    }}
+                >
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--color-accent)" }} />
+                    UMAP
+                </span>
+            </div>
+        </div>
+    );
+}
 
 function ResolutionControl({
     value,
@@ -302,7 +404,6 @@ export default function DatasetPage({
 
     const [umap, setUmap] = useState<UmapResponse | null>(null);
     const [loading, setLoading] = useState(true);
-    const [datasetInfo, setDatasetInfo] = useState<DatasetInfo | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     const [resolution, setResolution] = useState(DEFAULT_RESOLUTION);
@@ -328,16 +429,6 @@ export default function DatasetPage({
             });
     }, [datasetId]);
 
-    useEffect(() => {
-        fetchDatasetInfo(datasetId)
-            .then((data) => {
-                console.log("datasetInfo 응답:", data);
-                setDatasetInfo(data);
-            })
-            .catch((err) => {
-                console.error("fetchDatasetInfo 실패:", err);
-            });
-    }, [datasetId]);
 
     async function handleRunClustering() {
         setClusteringError(null);
@@ -376,8 +467,8 @@ export default function DatasetPage({
                     >
                         ←
                     </button>
-                    <span className="text-muted" style={{ fontSize: 12 }}>
-                        {datasetInfo?.fileName ?? datasetId}
+                    <span className="text-muted" style={{ fontSize: 12, color: "var(--color-text)" }}>
+                        {umap?.fileName ?? datasetId}
                     </span>
                 </div>
             </header>
@@ -394,6 +485,8 @@ export default function DatasetPage({
                         gap: "var(--space-6)",
                     }}
                 >
+                    {umap && <DatasetMetaCard umap={umap} />}
+
                     <ResolutionControl
                         value={resolution}
                         onChange={setResolution}
