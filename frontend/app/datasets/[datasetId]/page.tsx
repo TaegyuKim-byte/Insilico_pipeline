@@ -124,7 +124,7 @@ function DatasetMetaCard({ umap }: { umap: UmapResponse }) {
                     }}
                 >
                     <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--color-accent)" }} />
-                    Neighbor graph
+                    Neighbor Graph
                 </span>
                 <span
                     style={{
@@ -456,7 +456,7 @@ export default function DatasetPage({
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "var(--space-4) var(--space-6)",
-                    borderBottom: "1px solid var(--color-divider)",
+                    borderBottom: "1px solid rgba(0,0,0,0.14)",
                 }}
             >
                 <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
@@ -478,7 +478,7 @@ export default function DatasetPage({
                     style={{
                         width: 280,
                         flexShrink: 0,
-                        borderRight: "1px solid var(--color-divider)",
+                        borderRight: "1px solid rgba(0,0,0,0.14)",
                         padding: "var(--space-6)",
                         display: "flex",
                         flexDirection: "column",
