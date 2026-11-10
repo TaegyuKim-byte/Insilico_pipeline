@@ -131,7 +131,9 @@ export function uploadDataset(
 
 export type UmapResponse = {
   datasetId: string;
+  fileName: string;
   cellCount: number;
+  geneCount: number;
   points: [number, number][];
 };
 
@@ -209,20 +211,5 @@ export async function runClustering(datasetId: string, resolution: number): Prom
   throw new ClusteringError(code, message);
 }
 
-export type DatasetInfo = {
-  datasetId: string;
-  fileName: string;
-  fileSize: number; // KB
-  cellCount: number;
-  geneCount: number;
-  hasLeiden: boolean;
-};
 
-export async function fetchDatasetInfo(datasetId: string): Promise<DatasetInfo> {
-  const res = await fetch(`${API_BASE_URL}/api/datasets/${datasetId}`);
-  if (!res.ok) {
-    if (res.status === 404) throw new Error("해당 데이터셋을 찾을 수 없습니다.");
-    throw new Error("데이터셋 정보를 불러오는 중 오류가 발생했습니다.");
-  }
-  return res.json();
-}
+
